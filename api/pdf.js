@@ -8,12 +8,6 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Simple secret key check — hardcoded on both sides
-  const authHeader = req.headers['x-api-key'];
-  if (authHeader !== 'hosp-pdf-secret-2026') {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
   const { html } = req.body;
   if (!html) {
     return res.status(400).json({ error: 'Missing html in request body' });
@@ -30,26 +24,18 @@ module.exports = async (req, res) => {
     });
 
     const page = await browser.newPage();
-
-    // Set A4 viewport
     await page.setViewport({ width: 794, height: 1123 });
-
-    // Load HTML content
     await page.setContent(html, { waitUntil: 'networkidle0', timeout: 15000 });
-
-    // Wait for Google Fonts to load
     await page.evaluateHandle('document.fonts.ready');
 
-    // Generate PDF — A4, no margins (HTML handles its own padding)
     const pdfBuffer = await page.pdf({
-      format:           'A4',
-      printBackground:  true,
-      margin:           { top: '0', right: '0', bottom: '0', left: '0' },
+      format:          'A4',
+      printBackground: true,
+      margin:          { top: '0', right: '0', bottom: '0', left: '0' },
     });
 
     await browser.close();
 
-    // Return PDF binary
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Length', pdfBuffer.length);
     res.status(200).send(pdfBuffer);

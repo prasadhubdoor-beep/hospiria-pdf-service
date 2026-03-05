@@ -1,4 +1,3 @@
-
 const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 
@@ -9,9 +8,9 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Simple secret key check — set this in Vercel env vars
+  // Simple secret key check — hardcoded on both sides
   const authHeader = req.headers['x-api-key'];
-  if (authHeader !== process.env.PDF_API_KEY) {
+  if (authHeader !== 'hosp-pdf-secret-2026') {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 

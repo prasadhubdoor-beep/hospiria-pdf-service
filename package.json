@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Serverless HTML to PDF converter for Hospiria certificates",
   "dependencies": {
-    "@sparticuz/chromium": "^123.0.1",
-    "puppeteer-core": "^22.6.0"
+    "@sparticuz/chromium": "^110.0.0",
+    "puppeteer-core": "^19.6.3"
   }
 }
